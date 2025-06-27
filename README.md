@@ -47,6 +47,15 @@ $ pnpm run start
 # watch mode
 $ pnpm run start:dev
 
+# generate gql
+$ pnpm run generate:init
+
+# watch generate gql
+$ pnpm run generate
+
+# watch mode + generate gql
+$ pnpm run start:dev:generate
+
 # production mode
 $ pnpm run start:prod
 ```
