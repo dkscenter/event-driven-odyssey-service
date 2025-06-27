@@ -1,0 +1,65 @@
+type CustomPaginate {
+  """
+  number of docs per page
+  """
+  limit: Int!
+
+  """
+  number of page
+  """
+  page: Int !
+
+  """
+  total Items
+  """
+  totalItems: Int! 
+
+  """
+  total Pages
+  """
+  totalPages: Int!
+
+  """
+  hasPrevPage
+  """
+  hasPrevPage: Boolean!
+
+  """
+  hasNextPage
+  """
+  hasNextPage: Boolean!
+
+  """
+  prevPage 
+  """
+  prevPage: Int
+
+  """
+  nextPage
+  """
+  nextPage: Int
+}
+
+input CustomPaginateInput {
+  """
+  number of docs per page
+  """
+  limit: Int! = 10
+
+  """
+  number of page
+  """
+  page: Int! = 1
+}
+
+enum EnumSortOrder {
+  """
+  เรียงข้อมูลจาก น้อย ไป มาก 
+  """
+  ASC
+
+  """
+  เรียงข้อมูลจาก มาก ไป น้อย
+  """
+  DESC
+}

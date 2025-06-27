@@ -1,0 +1,24 @@
+type Gumon {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateGumonInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateGumonInput {
+  id: Int!
+}
+
+type Query {
+  gumons: [Gumon]!
+  gumon(id: Int!): Gumon
+}
+
+type Mutation {
+  createGumon(createGumonInput: CreateGumonInput!): Gumon!
+  updateGumon(updateGumonInput: UpdateGumonInput!): Gumon!
+  removeGumon(id: Int!): Gumon
+}
