@@ -24,9 +24,6 @@ interface IRefreshData {
 @Injectable()
 export class SyncGumonService implements OnModuleInit {
   constructor(
-    @InjectConnection()
-    private readonly sectionConnection: Connection,
-
     //dataBase
     @InjectModel(GumonDocument.name)
     private readonly gumonDocModel: CombinedPluginModel<GumonDocument>,
@@ -41,9 +38,9 @@ export class SyncGumonService implements OnModuleInit {
       this.processMessage.bind(this),
     );
 
-    this.gumonDocModel.create({
-      name: 'SyncGumonService',
-    });
+    // this.gumonDocModel.create({
+    //   name: 'SyncGumonService',
+    // });
   }
 
   async processMessage(headers: IKafkaHeaders, message: string) {

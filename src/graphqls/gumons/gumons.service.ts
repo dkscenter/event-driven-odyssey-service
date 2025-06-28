@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGumonInput } from './dto/create-gumon.input';
-import { UpdateGumonInput } from './dto/update-gumon.input';
+import { CreateGumonInputDto } from './dto/create-gumon.input';
+import { UpdateGumonInputDto } from './dto/update-gumon.input';
+import { GumonDocument } from 'src/database/schemas/gumon.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { CombinedPluginModel } from 'src/database/database.interface';
 
 @Injectable()
 export class GumonsService {
-  create(createGumonInput: CreateGumonInput) {
-    return 'This action adds a new gumon';
+  constructor(
+    //dataBase
+    @InjectModel(GumonDocument.name)
+    private readonly gumonDocModel: CombinedPluginModel<GumonDocument>,
+  ) {}
+
+  async create(createGumonInput: CreateGumonInputDto) {
+    const newGumon = await this.gumonDocModel.create({ ...createGumonInput });
+    return newGumon;
   }
 
-  findAll() {
-    return `This action returns all gumons`;
+  async findAll() {
+    const gumons = await this.gumonDocModel.find();
+    return gumons;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} gumon`;
+  async findOne(id: string) {
+    const gumon = await this.gumonDocModel.findById(id);
+    return gumon;
   }
 
-  update(id: number, updateGumonInput: UpdateGumonInput) {
-    return `This action updates a #${id} gumon`;
+  async update(id: string, updateGumonInput: UpdateGumonInputDto) {
+    const data = await this.gumonDocModel.findByIdAndUpdate(
+      id,
+      { ...updateGumonInput },
+      { new: true },
+    );
+    return data;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} gumon`;
+  async remove(id: string) {
+    const gumon = await this.gumonDocModel.findByIdAndDelete(id);
+    return gumon;
   }
 }

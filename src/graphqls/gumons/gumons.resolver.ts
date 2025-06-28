@@ -1,34 +1,60 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql';
 import { GumonsService } from './gumons.service';
-import { CreateGumonInput } from './dto/create-gumon.input';
-import { UpdateGumonInput } from './dto/update-gumon.input';
+import { CreateGumonInputDto } from './dto/create-gumon.input';
+import { PubSub } from 'graphql-subscriptions';
+import { UpdateGumonInputDto } from './dto/update-gumon.input';
+const pubSub = new PubSub();
 
 @Resolver('Gumon')
 export class GumonsResolver {
   constructor(private readonly gumonsService: GumonsService) {}
 
   @Mutation('createGumon')
-  create(@Args('createGumonInput') createGumonInput: CreateGumonInput) {
-    return this.gumonsService.create(createGumonInput);
+  async create(
+    @Args('createGumonInput') createGumonInput: CreateGumonInputDto,
+  ) {
+    const newGumon = await this.gumonsService.create(createGumonInput);
+    await pubSub.publish('gumonCreated', {
+      gumonCreated: newGumon,
+    });
+
+    return newGumon;
   }
 
-  @Query('gumons')
+  @Query('getGumons')
   findAll() {
     return this.gumonsService.findAll();
   }
 
-  @Query('gumon')
-  findOne(@Args('id') id: number) {
+  @Query('getGumonById')
+  findOne(@Args('id') id: string) {
     return this.gumonsService.findOne(id);
   }
 
   @Mutation('updateGumon')
-  update(@Args('updateGumonInput') updateGumonInput: UpdateGumonInput) {
-    return this.gumonsService.update(updateGumonInput.id, updateGumonInput);
+  update(
+    @Args('id') id: string,
+    @Args('updateGumonInput') updateGumonInput: UpdateGumonInputDto,
+  ) {
+    return this.gumonsService.update(id, updateGumonInput);
   }
 
   @Mutation('removeGumon')
-  remove(@Args('id') id: number) {
+  remove(@Args('id') id: string) {
     return this.gumonsService.remove(id);
   }
+
+  @Subscription('gumonCreated', {
+    resolve: (value) => value,
+  })
+  gumonCreated() {
+    console.log('gumonCreated subscription triggered');
+    // This subscription will listen for 'gumonCreated' events
+    return pubSub.subscribe('gumonCreated', async (payload) => {
+      return payload.gumonCreated;
+    });
+  }
+  // commentAdded() {
+  //   return pubSub.asyncIterableIterator('gumonCreated');
+  // }
 }

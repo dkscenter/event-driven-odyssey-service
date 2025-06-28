@@ -1,6 +1,13 @@
-import { CreateGumonInput } from './create-gumon.input';
-import { PartialType } from '@nestjs/mapped-types';
+import { NotEquals } from 'class-validator';
+import { UpdateGumonInput } from 'src/schema/graphql.schema';
 
-export class UpdateGumonInput extends PartialType(CreateGumonInput) {
-  id: number;
+export class UpdateGumonInputDto extends UpdateGumonInput {
+  @NotEquals(null)
+  name?: string;
+
+  @NotEquals(null)
+  description?: string;
+
+  @NotEquals(null)
+  isActive?: boolean;
 }

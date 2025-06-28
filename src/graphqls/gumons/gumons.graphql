@@ -1,24 +1,88 @@
 type Gumon {
-  # Example field (placeholder)
-  exampleField: Int
+  """
+  รหัสประจำตัวของ Gumon
+  """
+  _id: String!
+  """
+  ชื่อของ Gumon
+  """
+  name: String!
+  """
+  คำอธิบายของ Gumon
+  """
+  description: String!
+  """
+  สถานะการใช้งานของ Gumon
+  """
+  isActive: Boolean!
+  """
+  วันที่สร้าง Gumon
+  """
+  createdAt: String!
+  """
+  วันที่แก้ไขล่าสุดของ Gumon
+  """
+  updatedAt: String
 }
 
 input CreateGumonInput {
-  # Example field (placeholder)
-  exampleField: Int
+  """
+  ชื่อของ Gumon
+  """
+  name: String!
+  """
+  คำอธิบายของ Gumon
+  """
+  description: String = ""
+  """
+  สถานะการใช้งานของ Gumon
+  """
+  isActive: Boolean = true
 }
 
 input UpdateGumonInput {
-  id: Int!
+  """
+  ชื่อของ Gumon
+  """
+  name: String
+  """
+  คำอธิบายของ Gumon
+  """
+  description: String
+  """
+  สถานะการใช้งานของ Gumon
+  """
+  isActive: Boolean
 }
 
 type Query {
-  gumons: [Gumon]!
-  gumon(id: Int!): Gumon
+  """
+  ดึงข้อมูล Gumons
+  """
+  getGumons: [Gumon]!
+
+  """
+  ดึงข้อมูล Gumons ตาม ID
+  """
+  getGumonById(id: String!): Gumon
 }
 
 type Mutation {
+  """
+  สร้าง Gumon ใหม่
+  """
   createGumon(createGumonInput: CreateGumonInput!): Gumon!
-  updateGumon(updateGumonInput: UpdateGumonInput!): Gumon!
-  removeGumon(id: Int!): Gumon
+  """
+  อัปเดตข้อมูล Gumon ตาม ID
+  """
+  updateGumon(id: String!, updateGumonInput: UpdateGumonInput!): Gumon!
+
+  """
+  ลบ Gumon ตาม ID
+  """
+  removeGumon(id: String!): Gumon
+}
+
+type Subscription {
+  gumonCreated: Gumon
 }
