@@ -4,6 +4,8 @@ import { UpdateGumonInputDto } from './dto/update-gumon.input';
 import { GumonDocument } from 'src/database/schemas/gumon.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { CombinedPluginModel } from 'src/database/database.interface';
+import { customPaginate } from 'src/database/customPaginate';
+import { CustomPaginate } from 'src/schema/graphql.schema';
 
 @Injectable()
 export class GumonsService {
@@ -19,8 +21,20 @@ export class GumonsService {
   }
 
   async findAll() {
-    const gumons = await this.gumonDocModel.find();
-    return gumons;
+    const gumonList = await customPaginate<GumonDocument>({
+      model: this.gumonDocModel,
+      query: {},
+      options: {
+        limit: 10,
+        page: 1,
+        sort: { createdAt: -1 },
+      },
+    });
+    console.log('gumonList', gumonList);
+    return {
+      data: gumonList.data,
+      pagination: gumonList.pagination as CustomPaginate,
+    };
   }
 
   async findOne(id: string) {

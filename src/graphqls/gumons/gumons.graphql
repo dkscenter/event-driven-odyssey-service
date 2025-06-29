@@ -59,12 +59,17 @@ type Query {
   """
   ดึงข้อมูล Gumons
   """
-  getGumons: [Gumon]!
+  getGumons: GumonPagination!
 
   """
   ดึงข้อมูล Gumons ตาม ID
   """
   getGumonById(id: String!): Gumon
+}
+
+type GumonPagination {
+  data: [Gumon]!
+  pagination: CustomPaginate!
 }
 
 type Mutation {
